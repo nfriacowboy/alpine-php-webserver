@@ -35,7 +35,6 @@ RUN apk --no-cache add \
         nginx \
         runit \
         curl \
-        shadow \
 # Bring in gettext so we can get `envsubst`, then throw
 # the rest away. To do this, we need to install `gettext`
 # then move `envsubst` out of the way so `gettext` can
@@ -62,7 +61,8 @@ RUN apk --no-cache add \
     && chown -R $(id -u nobody):$(id -g nobody) /var/lib/nginx \
     && chown -R $(id -u nobody):$(id -g nobody) /var/log/nginx \
 # CVE-2026-111497: make sure brotli-libs lands at >= 1.2.1 in the final image
-    && apk upgrade --no-cache brotli-libs
+    && apk upgrade --no-cache brotli-libs \
+    && [ "$(apk version -t "$(apk info -e -v brotli-libs | sed 's/^brotli-libs-//')" 1.2.1-r0)" != "<" ]
 
 # Add configuration files
 COPY --chown=nobody rootfs/ /
