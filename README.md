@@ -1,19 +1,19 @@
-# Docker PHP-FPM 8.1 & Nginx 1.22 on Alpine Linux
+# Docker PHP-FPM 8.4 & Nginx on Alpine Linux
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/erseco/alpine-php-webserver.svg)](https://hub.docker.com/r/erseco/alpine-php-webserver/)
 ![Docker Image Size](https://img.shields.io/docker/image-size/erseco/alpine-php-webserver)
-![nginx 1.22.0](https://img.shields.io/badge/nginx-1.18-brightgreen.svg)
-![php 8.1](https://img.shields.io/badge/php-8.1-brightgreen.svg)
+![nginx](https://img.shields.io/badge/nginx-1.30.6-brightgreen.svg)
+![php 8.4](https://img.shields.io/badge/php-8.4-brightgreen.svg)
 ![License MIT](https://img.shields.io/badge/license-MIT-blue.svg)
 
-Example PHP-FPM 8.0 & Nginx 1.22 setup for Docker, build on [Alpine Linux](https://www.alpinelinux.org/).
+Example PHP-FPM 8.4 & Nginx setup for Docker, build on [Alpine Linux](https://www.alpinelinux.org/).
 The image is only +/- 25MB large.
 
 Repository: https://github.com/erseco/alpine-php-webserver
 
 * Built on the lightweight and secure Alpine Linux distribution
 * Very small Docker image size (+/-25MB)
-* Uses PHP 8.0 for better performance, lower cpu usage & memory footprint
+* Uses PHP 8.4 for better performance, lower cpu usage & memory footprint
 * Multi-arch support: 386, amd64, arm/v6, arm/v7, arm64, ppc64le, s390x
 * Optimized for 100 concurrent users
 * Optimized to only use resources when there's traffic (by using PHP-FPM's ondemand PM)
@@ -82,11 +82,11 @@ Nginx configuration:
 
 PHP configuration:
 
-    docker run -v "`pwd`/php-setting.ini:/etc/php8/conf.d/settings.ini" erseco/alpine-php-webserver
+    docker run -v "`pwd`/php-setting.ini:/etc/php84/conf.d/settings.ini" erseco/alpine-php-webserver
 
 PHP-FPM configuration:
 
-    docker run -v "`pwd`/php-fpm-settings.conf:/etc/php8/php-fpm.d/server.conf" erseco/alpine-php-webserver
+    docker run -v "`pwd`/php-fpm-settings.conf:/etc/php84/php-fpm.d/server.conf" erseco/alpine-php-webserver
 
 _Note; Because `-v` requires an absolute path I've added `pwd` in the example to return the absolute path to the current directory_
 

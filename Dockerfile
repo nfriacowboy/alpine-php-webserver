@@ -1,36 +1,37 @@
 ARG ARCH=
-FROM ${ARCH}alpine:3.17
+FROM ${ARCH}alpine:3.24
+# CVE-2026-111497: need brotli-libs >= 1.2.1
 
 LABEL Maintainer="Ernesto Serrano <info@ernesto.es>" \
       Description="Lightweight container with Nginx & PHP-FPM based on Alpine Linux."
 
 # Install packages
 RUN apk --no-cache add \
-        php81 \
-        php81-fpm \
-        php81-opcache \
-        php81-pecl-apcu \
-        php81-mysqli \
-        php81-pgsql \
-        php81-json \
-        php81-openssl \
-        php81-curl \
-        php81-zlib \
-        php81-soap \
-        php81-xml \
-        php81-fileinfo \
-        php81-phar \
-        php81-intl \
-        php81-dom \
-        php81-xmlreader \
-        php81-ctype \
-        php81-session \
-        php81-iconv \
-        php81-tokenizer \
-        php81-zip \
-        php81-simplexml \
-        php81-mbstring \
-        php81-gd \
+        php84 \
+        php84-fpm \
+        php84-opcache \
+        php84-pecl-apcu \
+        php84-mysqli \
+        php84-pgsql \
+        php84-json \
+        php84-openssl \
+        php84-curl \
+        php84-zlib \
+        php84-soap \
+        php84-xml \
+        php84-fileinfo \
+        php84-phar \
+        php84-intl \
+        php84-dom \
+        php84-xmlreader \
+        php84-ctype \
+        php84-session \
+        php84-iconv \
+        php84-tokenizer \
+        php84-zip \
+        php84-simplexml \
+        php84-mbstring \
+        php84-gd \
         nginx \
         runit \
         curl \
@@ -55,9 +56,13 @@ RUN apk --no-cache add \
 # Remove default server definition
     && rm /etc/nginx/http.d/default.conf \
 # Make sure files/folders needed by the processes are accessable when they run under the nobody user
-    && chown -R nobody.nobody /run \
-    && chown -R nobody.nobody /var/lib/nginx \
-    && chown -R nobody.nobody /var/log/nginx
+# (3.24 chown doesn't resolve the user.group spelling, so resolve the id ourselves)
+    && chown -R $(id -u nobody):$(id -g nobody) /run \
+    && chown -R $(id -u nobody):$(id -g nobody) /var/lib/nginx \
+    && chown -R $(id -u nobody):$(id -g nobody) /var/log/nginx \
+# CVE-2026-111497: make sure brotli-libs lands at >= 1.2.1 in the final image
+    && apk upgrade --no-cache brotli-libs \
+    && [ "$(apk version -t "$(apk info -e -v brotli-libs | sed 's/^brotli-libs-//')" 1.2.1-r0)" != "<" ]
 
 # Add configuration files
 COPY --chown=nobody rootfs/ /
